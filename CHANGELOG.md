@@ -15,4 +15,7 @@
 - Verified correctness of projector construction for computational basis states
 - Tested projector properties (orthogonality and completeness)
 
-  
+
+## 1/29/2026
+Implemented sampling function to choose measurement outcomes from probability vector p.
+Implemented full measurement function returning outcome, probabilities, and post-measurement state.

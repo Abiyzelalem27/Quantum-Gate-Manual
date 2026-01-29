@@ -6,43 +6,44 @@ import numpy as np
 # 1. BASIC SINGLE-QUBIT GATES
 
 # Identity gate: leaves the qubit unchanged
+
 I = np.array([[1, 0],
-              [0, 1]])
+              [0, 1]], dtype=complex)
 
 # Pauli-X gate (quantum NOT)
 # Swaps |0⟩ ↔ |1⟩
 X = np.array([[0, 1],
-              [1, 0]])
+              [1, 0]], dtype=complex)
 
 # Pauli-Y gate
 # Rotation around the Y-axis
 Y = np.array([[0, -1j],
-              [1j,  0]])
+              [1j,  0]], dtype=complex)
 
 # Pauli-Z gate
 # Adds a phase of -1 to |1⟩
 Z = np.array([[1,  0],
-              [0, -1]])
+              [0, -1]], dtype=complex)
 
 # Hadamard gate (Creates superposition states)
 H = 1 / np.sqrt(2) * np.array([[1,  1],
-                               [1, -1]])
+                               [1, -1]], dtype=complex)
 
 # Projector onto |0⟩
 P0 = np.array([[1, 0],
-               [0, 0]])
+               [0, 0]], dtype=complex)
 
 # Projector onto |1⟩
 P1 = np.array([[0, 0],
-               [0, 1]])
+               [0, 1]], dtype=complex)
 
 # Phase (S) gate
 S = np.array([[1, 0],
-              [0, 1j]])
+              [0, 1j]], dtype=complex)
 
 # T gate
 T = np.array([[1, 0],
-              [0, np.e**(1j * np.pi / 4)]])
+              [0, np.e**(1j * np.pi / 4)]], dtype=complex)
 
 
 def projectors(dim):
@@ -51,7 +52,7 @@ def projectors(dim):
     """
     projectors = []
     for i in range(dim):
-        ket = np.zeros(dim)
+        ket = np.zeros(dim, dtype=complex)
         ket[i] = 1
         P = np.outer(ket, ket)
         projectors.append(P)
@@ -91,7 +92,7 @@ def rotation_gate(theta, n):
 CNOT = np.array([[1, 0, 0, 0],
                  [0, 1, 0, 0],
                  [0, 0, 0, 1],
-                 [0, 0, 1, 0]])
+                 [0, 0, 1, 0]], dtype=complex)
 
 
 # MULTI-QUBIT OPERATOR CONSTRUCTION
@@ -221,3 +222,95 @@ def controlled_gate(U, control, target, N):
     ]
 
     return U_N_qubits(P0_ops) + U_N_qubits(P1_ops)
+
+    import numpy as np
+
+    
+
+def normalize_state(psi):
+    """Normalize a pure state vector |psi>."""
+    norm = np.linalg.norm(psi)
+    if np.isclose(norm, 0):
+        raise ValueError("State vector has zero norm.")
+    return psi / norm
+
+
+def born_rule_probs(rho, projectors):
+    """
+    Compute measurement outcome probabilities using the Born rule:
+    p_i = Tr(P_i * rho) for each projector P_i.
+
+    Returns a normalized probability vector.
+    """
+    probs = np.array([np.real(np.trace(Pi @ rho)) for Pi in projectors])
+
+    # safety: numeric cleanup + normalization
+    probs = np.clip(probs, 0, 1)
+    probs = probs / np.sum(probs)
+
+    return probs
+
+
+def sample_from_probs(probs):
+    """
+    Return a sampled index based on probs.
+    """
+    return np.random.choice(len(probs), p=probs)
+
+
+
+def measure_pure_state(psi, projectors):
+    """
+    Measure pure state |psi> using projectors.
+
+    Returns:
+        outcome (int)
+        psi_post (np.ndarray)
+        probs (np.ndarray)
+    """
+    psi = normalize_state(psi)
+    probs = born_probs_pure(psi, projectors)
+    outcome = sample_from_probs(probs)
+
+    Pk = projectors[outcome]
+
+    psi_post_unnormalized = Pk @ psi
+    norm_post = np.linalg.norm(psi_post_unnormalized)
+
+    if np.isclose(norm_post, 0):
+        raise ValueError("Outcome probability ~0 (numerical issue).")
+
+    psi_post = psi_post_unnormalized / norm_post
+
+    return outcome, psi_post, probs
+
+
+def measurement_density_matrix(rho, projectors):
+    """
+    Perform measurement using GIVEN projectors.
+
+    Args:
+        rho (np.ndarray): density matrix
+        projectors (list[np.ndarray]): measurement projectors P_i
+
+    Returns:
+        outcome (int)
+        rho_post (np.ndarray)
+        probs (np.ndarray)
+    """
+    probs = born_rule_probs(rho, projectors)
+    outcome = sample_from_probs(probs)
+
+    Pk = projectors[outcome]
+    numerator = Pk @ rho @ Pk
+    denom = np.trace(numerator)
+
+    if np.isclose(denom, 0):
+        raise ValueError("Outcome probability ~0 (numerical issue).")
+
+    rho_post = numerator / denom
+
+    return outcome, rho_post, probs
+
+
+    

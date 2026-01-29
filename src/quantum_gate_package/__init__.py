@@ -1,34 +1,39 @@
 
 
 from .operator import (
+    I,
     CNOT,
-     S,
+    S,
     T,
     Z,
     Y,
-    I,
     X,
     H,
     P0,
     P1,
-rotation_gate,
+    rotation_gate,
     U_N_qubits,
     U_one_gate,
     U_two_gates,
     rho,
     evolve,
-controlled_gate,
-projectors,
+    controlled_gate,
+    projectors,
+    born_rule_probs,
+    sample_from_probs,
+    measure_pure_state,
+measurement_density_matrix,
+    
 )
 
 __all__ = [
-   "CNOT",
+    "I",
+    "CNOT",
     "S",
     "T",
     "rotation_gate",
     "Z",
-    "Y"
-    "I",
+    "Y",
     "X",
     "H",
     "P0",
@@ -40,4 +45,8 @@ __all__ = [
     "evolve",
     "controlled_gate",
     "projectors",
+    "born_rule_probs",
+    "sample_from_probs",
+    "measure_pure_state",
+    "measurement_density_matrix",
 ]

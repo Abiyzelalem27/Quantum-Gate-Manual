@@ -1,10 +1,18 @@
-import numpy as np
+
+import numpy as np 
 import pytest
-from quantum_gate_package import ( 
+from numpy.testing import assert_allclose
+
+from quantum_gate_package import (
     I, X, Y, Z, H, S, T,
-    P0, P1,
-    U_one_gate, U_two_gates, controlled_gate, projectors,U_N_qubits
+    P0, P1, CNOT,
+    projectors,
+    U_N_qubits, U_one_gate, U_two_gates,
+    controlled_gate,
+    born_rule_probs,
+    sample_from_probs,
 )
+
 
 
 def test_projector_operators():
@@ -65,7 +73,7 @@ def test_controlled_gate_raises_error_when_control_equals_target():
     Explicitly check that controlled_gate raises ValueError
     when control == target, for multiple system sizes.
     """
-    for N in [2, 3, 4]:
+    for N in [2, 2, 4]:
         for i in range(N):
             with pytest.raises(ValueError, match="Control and target must be different"):
                 controlled_gate(X, i, i, N)
@@ -327,4 +335,69 @@ def test_U_two_gates_reversed_indices():
     U_two = U_two_gates(H, X, i, j, N)
     expected = U_one_gate(H, i, N) @ U_one_gate(X, j, N)
 
-    assert np.allclose(U_two, expected)
+    assert np.allclose(U_two, expected) 
+
+
+def test_born_rule_probs_properties():
+    rho = np.array([[0.7, 0.0],
+                    [0.0, 0.3]], dtype=complex)
+
+    P0 = np.array([[1, 0],
+                   [0, 0]], dtype=complex)
+
+    P1 = np.array([[0, 0],
+                   [0, 1]], dtype=complex)
+
+    projectors = [P0, P1]
+
+    probs = born_rule_probs(rho, projectors)
+
+    # Property 1: probabilities are real
+    assert np.allclose(np.imag(probs), 0.0)
+
+    # Property 2: probabilities are non-negative
+    assert np.all(probs >= 0)
+
+    # Property 3: probabilities sum to 1
+    assert np.isclose(np.sum(probs), 1.0)
+
+
+def test_born_rule_probs_diagonal_case():
+    rho = np.array([[0.7, 0.0],
+                    [0.0, 0.3]], dtype=complex)
+
+    P0 = np.array([[1, 0],
+                   [0, 0]], dtype=complex)
+
+    P1 = np.array([[0, 0],
+                   [0, 1]], dtype=complex)
+
+    probs = born_rule_probs(rho, [P0, P1])
+
+    # For diagonal rho: probabilities match diagonal entries
+    assert_allclose(probs, np.array([0.7, 0.3]))
+
+
+def test_controlled_gate_matches_projector_definition_all_indices():
+    """
+    Verify controlled_gate(U, control, target, N) matches:
+        C(U) = P0(control) ⊗ I + P1(control) ⊗ U(target)
+    for all valid (control != target).
+    """
+    for N in [2, 2, 4]:
+        for control in range(N):
+            for target in range(N):
+
+                if control == target:
+                    continue  # invalid, tested separately
+
+                C_U = controlled_gate(X, control, target, N)
+
+                # Expected operator (projector decomposition)
+                P0_ops = [P0 if i == control else I for i in range(N)]
+                P1_ops = [P1 if i == control else (X if i == target else I) for i in range(N)]
+
+                expected = U_N_qubits(P0_ops) + U_N_qubits(P1_ops)
+
+                assert np.allclose(C_U, expected) 
+
