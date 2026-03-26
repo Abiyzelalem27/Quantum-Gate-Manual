@@ -1,21 +1,24 @@
 
 
-## 1/16/2026
-- Implemented a unified quantum gate framework supporting both state vectors and density matrices.
-- Added comprehensive unit tests validating gate construction, evolution, and controlled operations.
-- Verified correctness through structural, compositional, and basis-state tests.
+# Changelog
 
-## 1/23/2026
+## [0.3.0] - 2026-01-23
+### Added
+- Support for multi-qubit gates and N-qubit registers  
+- Generalized controlled-gates with arbitrary control and target mapping  
+- Projective measurement operators for arbitrary N-qubit systems  
+- Property checks for projector orthogonality and completeness  
 
--Integrated useful functions from previous notebooks into the package
-- Refined and stabilized unit tests for multi-qubit gates
-- Fixed test collection and indentation issues
-- Implemented generalized controlled-gate with arbitrary control and target
-- Implemented projective measurement operators for arbitrary N-qubit registers
-- Verified correctness of projector construction for computational basis states
-- Tested projector properties (orthogonality and completeness)
+  
+## [0.2.0] - 2026-01-16
+### Added
+- Add State Vectors and density matrices.   
+- Unit test  
+- Bell state generation function for entanglement testing  
+- Bloch sphere visualization for single-qubit states  
 
 
-## 1/29/2026
-Implemented sampling function to choose measurement outcomes from probability vector p.
-Implemented full measurement function returning outcome, probabilities, and post-measurement state.
+## [0.1.0] - 2026-01-01
+### Added
+- Initial project structure and repository setup  
+- Basic identity and Pauli gate implementations  
