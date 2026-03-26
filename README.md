@@ -14,7 +14,7 @@ A collection of **quantum computing implementations** focusing on:
 
 # Quantum Gate Manual
 
-A collection of **quantum computing implementations** focusing on:
+A collection of quantum computing implementations* focusing on:
 
 - Quantum gate operations  
 - State visualizations on Bloch spheres  

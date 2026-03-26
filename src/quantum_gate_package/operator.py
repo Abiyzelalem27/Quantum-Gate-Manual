@@ -2,46 +2,24 @@
 
 import numpy as np
 
-
 # 1. BASIC SINGLE-QUBIT GATES
-
-# Identity gate: leaves the qubit unchanged
 
 I = np.array([[1, 0],
               [0, 1]], dtype=complex)
-
-# Pauli-X gate (quantum NOT)
-# Swaps |0⟩ ↔ |1⟩
 X = np.array([[0, 1],
               [1, 0]], dtype=complex)
-
-# Pauli-Y gate
-# Rotation around the Y-axis
 Y = np.array([[0, -1j],
               [1j,  0]], dtype=complex)
-
-# Pauli-Z gate
-# Adds a phase of -1 to |1⟩
 Z = np.array([[1,  0],
               [0, -1]], dtype=complex)
-
-# Hadamard gate (Creates superposition states)
 H = 1 / np.sqrt(2) * np.array([[1,  1],
                                [1, -1]], dtype=complex)
-
-# Projector onto |0⟩
 P0 = np.array([[1, 0],
                [0, 0]], dtype=complex)
-
-# Projector onto |1⟩
 P1 = np.array([[0, 0],
                [0, 1]], dtype=complex)
-
-# Phase (S) gate
 S = np.array([[1, 0],
               [0, 1j]], dtype=complex)
-
-# T gate
 T = np.array([[1, 0],
               [0, np.e**(1j * np.pi / 4)]], dtype=complex)
 
@@ -59,21 +37,12 @@ def projectors(dim):
     return projectors
 
 
-# SINGLE-QUBIT ROTATION GATE
-
 def rotation_gate(theta, n):
     """
     General single-qubit rotation gate.
-
-    This function implements a unitary rotation of a single qubit
-    by an angle `theta` around an axis `n` on the Bloch sphere.
-
     The rotation generator is constructed as N = n · σ,
     where σ = (X, Y, Z) are the Pauli matrices.
-
-    Parameters
-    ----------
-    theta : float
+    theta : 
         Rotation angle in radians.
     n : tuple of floats
         Rotation axis (nx, ny, nz).
@@ -95,21 +64,9 @@ CNOT = np.array([[1, 0, 0, 0],
                  [0, 0, 1, 0]], dtype=complex)
 
 
-# MULTI-QUBIT OPERATOR CONSTRUCTION
-
 def U_N_qubits(ops):
     """
     Constructs an N-qubit operator using tensor products.
-
-    Parameters
-    ----------
-    ops : list of numpy.ndarray
-        List of single-qubit operators.
-
-    Returns
-    -------
-    numpy.ndarray
-        N-qubit operator.
     """
     U = ops[0]
     for op in ops[1:]:
@@ -124,7 +81,7 @@ def U_one_gate(V, i, N):
 
     Parameters
     ----------
-    V : numpy.ndarray
+    V : 
         Single-qubit gate.
     i : int
         Target qubit index.
@@ -139,10 +96,8 @@ def U_one_gate(V, i, N):
 def U_two_gates(V, W, i, j, N):
     """
     Applies two single-qubit gates to an N-qubit system.
-
     If i != j:
         applies V on qubit i and W on qubit j.
-
     If i == j:
         applies the composed gate V @ W on qubit i,
         preserving operator ordering.
@@ -163,13 +118,6 @@ def U_two_gates(V, W, i, j, N):
 def rho(states, probabilities):
     """
     Constructs a density matrix from pure states.
-
-    Parameters
-    ----------
-    states : list of numpy.ndarray
-        State vectors.
-    probabilities : list of float
-        Classical probabilities.
     """
     return sum(p * np.outer(psi, psi.conj())
                for psi, p in zip(states, probabilities))
@@ -180,13 +128,6 @@ def rho(states, probabilities):
 def evolve(state, U):
     """
     Evolves a quantum state using a unitary operator.
-
-    Parameters
-    ----------
-    state : numpy.ndarray
-        State vector or density matrix.
-    U : numpy.ndarray
-        Unitary operator.
     """
     if state.ndim == 1:
         # Pure state evolution
@@ -201,9 +142,7 @@ def evolve(state, U):
 def controlled_gate(U, control, target, N):
     """
     Controlled-U gate on an N-qubit register.
-
     Implements the projector decomposition:
-
         C_U = P0(control) ⊗ I  +  P1(control) ⊗ U(target)
     """
     if control == target:
@@ -239,8 +178,6 @@ def born_rule_probs(rho, projectors):
     """
     Compute measurement outcome probabilities using the Born rule:
     p_i = Tr(P_i * rho) for each projector P_i.
-
-    Returns a normalized probability vector.
     """
     probs = np.array([np.real(np.trace(Pi @ rho)) for Pi in projectors])
 
@@ -262,11 +199,6 @@ def sample_from_probs(probs):
 def measure_pure_state(psi, projectors):
     """
     Measure pure state |psi> using projectors.
-
-    Returns:
-        outcome (int)
-        psi_post (np.ndarray)
-        probs (np.ndarray)
     """
     psi = normalize_state(psi)
     probs = born_probs_pure(psi, projectors)
@@ -287,16 +219,7 @@ def measure_pure_state(psi, projectors):
 
 def measurement_density_matrix(rho, projectors):
     """
-    Perform measurement using GIVEN projectors.
-
-    Args:
-        rho (np.ndarray): density matrix
-        projectors (list[np.ndarray]): measurement projectors P_i
-
-    Returns:
-        outcome (int)
-        rho_post (np.ndarray)
-        probs (np.ndarray)
+    Perform measurement using projectors.
     """
     probs = born_rule_probs(rho, projectors)
     outcome = sample_from_probs(probs)
@@ -307,10 +230,8 @@ def measurement_density_matrix(rho, projectors):
 
     if np.isclose(denom, 0):
         raise ValueError("Outcome probability ~0 (numerical issue).")
-
     rho_post = numerator / denom
-
-    return outcome, rho_post, probs
+    return outcome, rho_post, probs 
 
 
     

@@ -13,8 +13,6 @@ from quantum_gate_package import (
     sample_from_probs,
 )
 
-
-
 def test_projector_operators():
     assert np.allclose(P0 @ P0, P0)
     assert np.allclose(P1 @ P1, P1)
@@ -399,5 +397,5 @@ def test_controlled_gate_matches_projector_definition_all_indices():
 
                 expected = U_N_qubits(P0_ops) + U_N_qubits(P1_ops)
 
-                assert np.allclose(C_U, expected) 
+                assert np.allclose(C_U, expected)  
 
