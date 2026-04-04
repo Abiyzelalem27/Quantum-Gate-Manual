@@ -10,7 +10,7 @@ from quantum_gate_package import (
     U_N_qubits, U_one_gate, U_two_gates,
     controlled_gate,
     born_rule_probs,
-    sample_from_probs,
+    sample_from_probs, 
 )
 
 def test_projector_operators():

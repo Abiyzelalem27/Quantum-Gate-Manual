@@ -1,6 +1,6 @@
 
 
-from .operator import (
+from .operators import ( 
     I,
     CNOT,
     S,
