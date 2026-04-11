@@ -1,6 +1,5 @@
-<<<<<<< HEAD
-# Quantum Gate Manual
 
+# Quantum Gate Manual
 A collection of **quantum computing implementations** focusing on:
 
 - Quantum gate operations  
@@ -8,22 +7,6 @@ A collection of **quantum computing implementations** focusing on:
 - Quantum state preparation  
 - Multi-qubit systems and entanglement  
 - Creating Bell states  
-
-=======
-
-
-# Quantum Gate Manual
-
-A collection of quantum computing implementations* focusing on:
-
-- Quantum gate operations  
-- State visualizations on Bloch spheres  
-- Quantum state preparation  
-- Multi-qubit systems and entanglement  
-- Creating Bell states  
-
->>>>>>> Initial commit
----
 
 ## Overview
 
