@@ -21,4 +21,7 @@
 ## [0.1.0] - 2026-01-01
 ### Added
 - Initial project structure and repository setup  
-- Basic identity and Pauli gate implementations  
+- Basic identity and Pauli gate implementations
+
+## [0.1.0] - 2026-05-19
+- update 

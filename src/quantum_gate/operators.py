@@ -1,9 +1,6 @@
 
 
 import numpy as np
-
-# 1. BASIC SINGLE-QUBIT GATES
-
 I = np.array([[1, 0],
               [0, 1]], dtype=complex)
 X = np.array([[0, 1],
